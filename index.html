@@ -191,7 +191,7 @@
                 try {
                     const balanceWei = await tokenContract.methods.balanceOf(accounts[0]).call();
                     const decimals = tokens[tokenAddress].decimals;
-                    const balance = (Number(balanceWei) / Math.pow(10, decimals)).toFixed(4);
+                    const balance = (Number(balanceWei) / Math.pow(10, decimals)).toFixed(3);
                     document.getElementById('tokenBalance').innerText = `Token Balance: ${balance} ${tokens[tokenAddress].symbol}`;
                 } catch {
                     document.getElementById('tokenBalance').innerText = "Token Balance: Invalid Token";
@@ -210,7 +210,7 @@
                 const balanceWei = await tokenContract.methods.balanceOf(accounts[0]).call();
                 const decimals = tokens[tokenAddress].decimals;
                 const balance = Number(balanceWei) / Math.pow(10, decimals);
-                const amount = (balance * percentage / 100).toFixed(4);
+                const amount = (balance * percentage / 100).toFixed(3);
                 document.getElementById('amountInInput').value = amount;
                 updatePrice();
             });
@@ -234,7 +234,7 @@
             if (!tokenIn || !amountIn || !amountBone || amountBone < 1) return alert("Invalid input! BONE must be at least 1.");
             try {
                 const decimals = tokens[tokenIn].decimals;
-                const amountInWei = web3.utils.toWei(amountIn.toString(), 'ether') * Math.pow(10, decimals - 18);
+                const amountInWei = web3.utils.toBN(Math.round(amountIn * Math.pow(10, decimals)));
                 const amountBoneWei = web3.utils.toWei(amountBone.toString(), 'ether');
                 const tokenContract = new web3.eth.Contract(erc20ABI, tokenIn);
                 await tokenContract.methods.approve(contractAddress, amountInWei).send({ from: accounts[0] });
@@ -277,8 +277,8 @@
             userOrders.forEach(order => {
                 const token = tokens[order.tokenIn] || {symbol: "Unknown", logo: "", decimals: 6};
                 const decimals = token.decimals;
-                const amountIn = (Number(order.amountIn) / Math.pow(10, decimals)).toFixed(4);
-                const amountBone = web3.utils.fromWei(order.amountBone, 'ether');
+                const amountIn = (Number(order.amountIn) / Math.pow(10, decimals)).toFixed(3);
+                const amountBone = Number(web3.utils.fromWei(order.amountBone, 'ether')).toFixed(3);
                 const price = (Number(order.amountBone) / Number(order.amountIn) * Math.pow(10, decimals - 18)).toFixed(decimals);
                 userOrdersDiv.innerHTML += `
                     <div class="order-item">
@@ -303,8 +303,8 @@
             sortedOrders.forEach(order => {
                 const token = tokens[order.tokenIn] || {symbol: "Unknown", logo: "", decimals: 6};
                 const decimals = token.decimals;
-                const amountIn = (Number(order.amountIn) / Math.pow(10, decimals)).toFixed(4);
-                const amountBone = web3.utils.fromWei(order.amountBone, 'ether');
+                const amountIn = (Number(order.amountIn) / Math.pow(10, decimals)).toFixed(3);
+                const amountBone = Number(web3.utils.fromWei(order.amountBone, 'ether')).toFixed(3);
                 const price = (Number(order.amountBone) / Number(order.amountIn) * Math.pow(10, decimals - 18)).toFixed(decimals);
                 activeOrdersDiv.innerHTML += `
                     <div class="order-box">
