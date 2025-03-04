@@ -20,8 +20,8 @@
         .input-group { margin: 20px 0; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px; }
         select, input { padding: 12px; border: none; border-radius: 8px; margin: 5px; background-color: #444444; color: #ffffff; font-size: 1.1em; width: 250px; box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3); touch-action: manipulation; }
         select:focus, input:focus { outline: none; box-shadow: inset 0 0 10px #ffffff, 0 0 5px #ff9100; }
-        .token-option { display: flex; align-items: center; }
-        .token-option img { width: 20px; height: 20px; margin-right: 10px; }
+        select option { display: flex; align-items: center; }
+        .token-option img { width: 20px; height: 20px; margin-right: 10px; vertical-align: middle; }
         .percentage-buttons { display: flex; justify-content: center; gap: 10px; margin: 10px 0; }
         .percentage-btn { background-color: #ff9100; color: #ffffff; padding: 8px 15px; font-size: 1em; min-width: 60px; }
         .percentage-btn:hover { background-color: #e68a00; }
@@ -83,15 +83,15 @@
             <div class="input-group">
                 <select id="tokenInSelect">
                     <option value="">Select Token</option>
-                    <option value="0xeCe898EdCc0AF91430603175F945D8de75291c70"><img src="images/DAMN.png" alt="DAMN"> DAMN</option>
-                    <option value="0xe9Cb2D7ADC24Fc59FE00D6C0A0669BDF16805Fe0"><img src="images/feed.png" alt="FEED"> FEED</option>
-                    <option value="0x8f4b11d923BbAA6206f3Dd3ff84e8e31bafB49b7"><img src="images/wow.png" alt="WOW"> WOW</option>
-                    <option value="0x632d1FF1fB27d88EDeDB90e70bFC094D7932A0ad"><img src="images/shipa.png" alt="SHIPA"> SHIPA</option>
-                    <option value="0x61CFA29261d8151D39244b8FfCf8DFd2f9DF3839"><img src="images/CHIKA.png" alt="CHIKA"> CHIKA</option>
-                    <option value="0xD0daa7B6ff1B40d3cc6F0B2Cf7E85cB993D1c834"><img src="images/woof.png" alt="WOOF"> WOOF</option>
-                    <option value="0x0b4FD6288b6d32171CC515bfFC9340026F56A358"><img src="images/pika.png" alt="PIKA"> PIKA</option>
-                    <option value="0x0cCD687CC6F8461170336D8e8cf46A39313DEab9"><img src="images/luisa.png" alt="LUISA"> LUISA</option>
-                    <option value="0xB9Ae1d4e474CC154F48e5C2f0559Eb3A78Ad1F09"><img src="images/shibs.png" alt="SHIBS"> SHIBS</option>
+                    <option value="0xeCe898EdCc0AF91430603175F945D8de75291c70"><img src="images/DAMN.png" alt="DAMN" class="token-option"> DAMN</option>
+                    <option value="0xe9Cb2D7ADC24Fc59FE00D6C0A0669BDF16805Fe0"><img src="images/feed.png" alt="FEED" class="token-option"> FEED</option>
+                    <option value="0x8f4b11d923BbAA6206f3Dd3ff84e8e31bafB49b7"><img src="images/wow.png" alt="WOW" class="token-option"> WOW</option>
+                    <option value="0x632d1FF1fB27d88EDeDB90e70bFC094D7932A0ad"><img src="images/shipa.png" alt="SHIPA" class="token-option"> SHIPA</option>
+                    <option value="0x61CFA29261d8151D39244b8FfCf8DFd2f9DF3839"><img src="images/CHIKA.png" alt="CHIKA" class="token-option"> CHIKA</option>
+                    <option value="0xD0daa7B6ff1B40d3cc6F0B2Cf7E85cB993D1c834"><img src="images/woof.png" alt="WOOF" class="token-option"> WOOF</option>
+                    <option value="0x0b4FD6288b6d32171CC515bfFC9340026F56A358"><img src="images/pika.png" alt="PIKA" class="token-option"> PIKA</option>
+                    <option value="0x0cCD687CC6F8461170336D8e8cf46A39313DEab9"><img src="images/luisa.png" alt="LUISA" class="token-option"> LUISA</option>
+                    <option value="0xB9Ae1d4e474CC154F48e5C2f0559Eb3A78Ad1F09"><img src="images/shibs.png" alt="SHIBS" class="token-option"> SHIBS</option>
                 </select>
                 <input type="number" id="amountInInput" placeholder="Amount In" min="0" step="any">
                 <input type="number" id="amountBoneInput" placeholder="Amount BONE (Min 1)" min="1" step="any">
@@ -114,15 +114,15 @@
             <div class="input-group">
                 <select id="tokenFilterSelect">
                     <option value="">Select Token</option>
-                    <option value="0xeCe898EdCc0AF91430603175F945D8de75291c70"><img src="images/DAMN.png" alt="DAMN"> DAMN</option>
-                    <option value="0xe9Cb2D7ADC24Fc59FE00D6C0A0669BDF16805Fe0"><img src="images/feed.png" alt="FEED"> FEED</option>
-                    <option value="0x8f4b11d923BbAA6206f3Dd3ff84e8e31bafB49b7"><img src="images/wow.png" alt="WOW"> WOW</option>
-                    <option value="0x632d1FF1fB27d88EDeDB90e70bFC094D7932A0ad"><img src="images/shipa.png" alt="SHIPA"> SHIPA</option>
-                    <option value="0x61CFA29261d8151D39244b8FfCf8DFd2f9DF3839"><img src="images/CHIKA.png" alt="CHIKA"> CHIKA</option>
-                    <option value="0xD0daa7B6ff1B40d3cc6F0B2Cf7E85cB993D1c834"><img src="images/woof.png" alt="WOOF"> WOOF</option>
-                    <option value="0x0b4FD6288b6d32171CC515bfFC9340026F56A358"><img src="images/pika.png" alt="PIKA"> PIKA</option>
-                    <option value="0x0cCD687CC6F8461170336D8e8cf46A39313DEab9"><img src="images/luisa.png" alt="LUISA"> LUISA</option>
-                    <option value="0xB9Ae1d4e474CC154F48e5C2f0559Eb3A78Ad1F09"><img src="images/shibs.png" alt="SHIBS"> SHIBS</option>
+                    <option value="0xeCe898EdCc0AF91430603175F945D8de75291c70"><img src="images/DAMN.png" alt="DAMN" class="token-option"> DAMN</option>
+                    <option value="0xe9Cb2D7ADC24Fc59FE00D6C0A0669BDF16805Fe0"><img src="images/feed.png" alt="FEED" class="token-option"> FEED</option>
+                    <option value="0x8f4b11d923BbAA6206f3Dd3ff84e8e31bafB49b7"><img src="images/wow.png" alt="WOW" class="token-option"> WOW</option>
+                    <option value="0x632d1FF1fB27d88EDeDB90e70bFC094D7932A0ad"><img src="images/shipa.png" alt="SHIPA" class="token-option"> SHIPA</option>
+                    <option value="0x61CFA29261d8151D39244b8FfCf8DFd2f9DF3839"><img src="images/CHIKA.png" alt="CHIKA" class="token-option"> CHIKA</option>
+                    <option value="0xD0daa7B6ff1B40d3cc6F0B2Cf7E85cB993D1c834"><img src="images/woof.png" alt="WOOF" class="token-option"> WOOF</option>
+                    <option value="0x0b4FD6288b6d32171CC515bfFC9340026F56A358"><img src="images/pika.png" alt="PIKA" class="token-option"> PIKA</option>
+                    <option value="0x0cCD687CC6F8461170336D8e8cf46A39313DEab9"><img src="images/luisa.png" alt="LUISA" class="token-option"> LUISA</option>
+                    <option value="0xB9Ae1d4e474CC154F48e5C2f0559Eb3A78Ad1F09"><img src="images/shibs.png" alt="SHIBS" class="token-option"> SHIBS</option>
                 </select>
                 <button id="queryOrdersButton">Query Orders</button>
             </div>
@@ -234,7 +234,7 @@
             if (!tokenIn || !amountIn || !amountBone || amountBone < 1) return alert("Invalid input! BONE must be at least 1.");
             try {
                 const decimals = tokens[tokenIn].decimals;
-                const amountInWei = web3.utils.toBN(Math.round(amountIn * Math.pow(10, decimals)));
+                const amountInWei = web3.utils.toWei(amountIn.toString(), 'ether') * Math.pow(10, decimals - 18);
                 const amountBoneWei = web3.utils.toWei(amountBone.toString(), 'ether');
                 const tokenContract = new web3.eth.Contract(erc20ABI, tokenIn);
                 await tokenContract.methods.approve(contractAddress, amountInWei).send({ from: accounts[0] });
@@ -279,7 +279,7 @@
                 const decimals = token.decimals;
                 const amountIn = (Number(order.amountIn) / Math.pow(10, decimals)).toFixed(4);
                 const amountBone = web3.utils.fromWei(order.amountBone, 'ether');
-                const price = (Number(order.amountBone) / Number(order.amountIn)).toFixed(decimals);
+                const price = (Number(order.amountBone) / Number(order.amountIn) * Math.pow(10, decimals - 18)).toFixed(decimals);
                 userOrdersDiv.innerHTML += `
                     <div class="order-item">
                         <span>ID: ${order.id} | <img src="${token.logo}" alt="${token.symbol}"> ${token.symbol} ${amountIn} for ${amountBone} BONE | Price: ${price} BONE/${token.symbol}</span>
@@ -305,7 +305,7 @@
                 const decimals = token.decimals;
                 const amountIn = (Number(order.amountIn) / Math.pow(10, decimals)).toFixed(4);
                 const amountBone = web3.utils.fromWei(order.amountBone, 'ether');
-                const price = (Number(order.amountBone) / Number(order.amountIn)).toFixed(decimals);
+                const price = (Number(order.amountBone) / Number(order.amountIn) * Math.pow(10, decimals - 18)).toFixed(decimals);
                 activeOrdersDiv.innerHTML += `
                     <div class="order-box">
                         <span>ID: ${order.id}</span>
