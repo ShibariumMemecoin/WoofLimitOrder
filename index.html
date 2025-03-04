@@ -26,7 +26,7 @@
         .select-items { position: absolute; background-color: #444444; width: 100%; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); z-index: 99; max-height: 200px; overflow-y: auto; display: none; }
         .select-item { padding: 10px; cursor: pointer; display: flex; align-items: center; }
         .select-item:hover { background-color: #555555; }
-        .select-item img { width: 20px; height: 20px; margin-right: 10px; }
+        .select-item img, .select-selected img { width: 20px; height: 20px; margin-right: 10px; }
         .select-show { display: block; }
         .percentage-buttons { display: flex; justify-content: center; gap: 10px; margin: 10px 0; }
         .percentage-btn { background-color: #ff9100; color: #ffffff; padding: 8px 15px; font-size: 1em; min-width: 60px; }
@@ -149,15 +149,15 @@
     <script>
         let web3, accounts, contract;
         const contractAddress = "0x0D144DDA841948DC9B1F7738277737bdB1C62d4e";
-        const contractABI = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"orderId","type":"uint256"}],"name":"OrderCancelled","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"orderId","type":"uint256"},{"indexed":true,"internalType":"address","name":"trader","type":"address"},{"indexed":false,"internalType":"address","name":"tokenIn","type":"address"},{"indexed":false,"internalType":"uint256","name":"amountIn","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amountBone","type":"uint256"}],"name":"OrderCreated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"orderId","type":"uint256"},{"indexed":true,"internalType":"address","name":"buyer","type":"address"},{"indexed":false,"internalType":"uint256","name":"amountIn","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amountBone","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"feeAmount","type":"uint256"}],"name":"OrderFilled","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"FeesWithdrawn","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"token","type":"address"},{"indexed":false,"internalType":"bool","name":"isWhitelisted","type":"bool"}],"name":"TokenWhitelisted","type":"event"},{"inputs":[{"internalType":"uint256","name":"_orderId","type":"uint256"}],"name":"buy","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_orderId","type":"uint256"}],"name":"cancelOrder","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_tokenIn","type":"address"},{"internalType":"uint256","name":"_amountIn","type":"uint256"},{"internalType":"uint256","name":"_amountBone","type":"uint256"}],"name":"createOrder","outputs":[{"internalType":"uint256","name":"orderId","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"activeOrdersByToken","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"feeBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_tokenIn","type":"address"},{"internalType":"uint256","name":"_page","type":"uint256"},{"internalType":"uint256","name":"_perPage","type":"uint256"}],"name":"getActiveOrders","outputs":[{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"trader","type":"address"},{"internalType":"address","name":"tokenIn","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"amountBone","type":"uint256"},{"internalType":"bool","name":"isActive","type":"bool"}],"internalType":"struct WoofLimitOrder.Order[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getActiveOrderIds","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getFeeBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_orderId","type":"uint256"}],"name":"getOrder","outputs":[{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"trader","type":"address"},{"internalType":"address","name":"tokenIn","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"amountBone","type":"uint256"},{"internalType":"bool","name":"isActive","type":"bool"}],"internalType":"struct WoofLimitOrder.Order","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"uint256","name":"_page","type":"uint256"},{"internalType":"uint256","name":"_perPage","type":"uint256"}],"name":"getUserOrders","outputs":[{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"trader","type":"address"},{"internalType":"address","name":"tokenIn","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"amountBone","type":"uint256"},{"internalType":"bool","name":"isActive","type":"bool"}],"internalType":"struct WoofLimitOrder.Order[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nextOrderId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"orders","outputs":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"trader","type":"address"},{"internalType":"address","name":"tokenIn","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"amountBone","type":"uint256"},{"internalType":"bool","name":"isActive","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"ordersByUser","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"whitelistedTokens","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"withdrawFees","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_token","type":"address"},{"internalType":"bool","name":"_isWhitelisted","type":"bool"}],"name":"whitelistToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"stateMutability":"payable","type":"receive"}];
+        const contractABI = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"orderId","type":"uint256"}],"name":"OrderCancelled","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"orderId","type":"uint256"},{"indexed":true,"internalType":"address","name":"trader","type":"address"},{"indexed":false,"internalType":"address","name":"tokenIn","type":"address"},{"indexed":false,"internalType":"uint256","name":"amountIn","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amountBone","type":"uint256"}],"name":"OrderCreated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"orderId","type":"uint256"},{"indexed":true,"internalType":"address","name":"buyer","type":"address"},{"indexed":false,"internalType":"uint256","name":"amountIn","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amountBone","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"feeAmount","type":"uint256"}],"name":"OrderFilled","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"FeesWithdrawn","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"token","type":"address"},{"indexed":false,"internalType":"bool","name":"isWhitelisted","type":"bool"}],"name":"TokenWhitelisted","type":"event"},{"inputs":[{"internalType":"uint256","name":"_orderId","type":"uint256"}],"name":"buy","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_orderId","type":"uint256"}],"name":"cancelOrder","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_tokenIn","type":"address"},{"internalType":"uint256","name":"_amountIn","type":"uint256"},{"internalType":"uint256","name":"_amountBone","type":"uint256"}],"name":"createOrder","outputs":[{"internalType":"uint256","name":"orderId","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"activeOrdersByToken","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"feeBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_tokenIn","type":"address"},{"internalType":"uint256","name":"_page","type":"uint256"},{"internalType":"uint256","name":"_perPage","type":"uint256"}],"name":"getActiveOrders","outputs":[{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"trader","type":"address"},{"internalType":"address","name":"tokenIn","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"amountBone","type":"uint256"},{"internalType":"bool","name":"isActive","type":"bool"}],"internalType":"struct WoofLimitOrder.Order[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getActiveOrderIds","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getFeeBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_orderId","type":"uint256"}],"name":"getOrder","outputs":[{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"trader","type":"address"},{"internalType":"address","name":"tokenIn","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"amountBone","type":"uint256"},{"internalType":"bool","name":"isActive","type":"bool"}],"internalType":"struct WoofLimitOrder.Order","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"uint256","name":"_page","type":"uint256"},{"internalType":"uint256","name":"_perPage","type":"uint256"}],"name":"getUserOrders","outputs":[{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"trader","type":"address"},{"internalType":"address","name":"tokenIn","type":"address"},{"internalType":"uint256","name":"amountIn","type":"amountIn"},{"internalType":"uint256","name":"amountBone","type":"uint256"},{"internalType":"bool","name":"isActive","type":"bool"}],"internalType":"struct WoofLimitOrder.Order[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nextOrderId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"orders","outputs":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"trader","type":"address"},{"internalType":"address","name":"tokenIn","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"amountBone","type":"uint256"},{"internalType":"bool","name":"isActive","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"ordersByUser","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"whitelistedTokens","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"withdrawFees","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_token","type":"address"},{"internalType":"bool","name":"_isWhitelisted","type":"bool"}],"name":"whitelistToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"stateMutability":"payable","type":"receive"}];
         const erc20ABI = [{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"type":"function"}];
         const shibarium = {chainId: 109,chainName: 'Shibarium',nativeCurrency: {name: 'BONE',symbol: 'BONE',decimals: 18},rpcUrls: ['https://rpc.shibrpc.com'],blockExplorerUrls: ['https://shibariumscan.io']};
         const tokens = {
-            "0xeCe898EdCc0AF91430603175F945D8de75291c70": {symbol: "DAMN", logo: "images/DAMN.png", decimals: 8},
+            "0xeCe898EdCc0AF91430603175F945D8de75291c70": {symbol: "DAMN", logo: "images/damn.png", decimals: 8},
             "0xe9Cb2D7ADC24Fc59FE00D6C0A0669BDF16805Fe0": {symbol: "FEED", logo: "images/feed.png", decimals: 12},
             "0x8f4b11d923BbAA6206f3Dd3ff84e8e31bafB49b7": {symbol: "WOW", logo: "images/wow.png", decimals: 9},
             "0x632d1FF1fB27d88EDeDB90e70bFC094D7932A0ad": {symbol: "SHIPA", logo: "images/shipa.png", decimals: 10},
-            "0x61CFA29261d8151D39244b8FfCf8DFd2f9DF3839": {symbol: "CHIKA", logo: "images/CHIKA.png", decimals: 14},
+            "0x61CFA29261d8151D39244b8FfCf8DFd2f9DF3839": {symbol: "CHIKA", logo: "images/chika.png", decimals: 14},
             "0xD0daa7B6ff1B40d3cc6F0B2Cf7E85cB993D1c834": {symbol: "WOOF", logo: "images/woof.png", decimals: 6},
             "0x0b4FD6288b6d32171CC515bfFC9340026F56A358": {symbol: "PIKA", logo: "images/pika.png", decimals: 9},
             "0x0cCD687CC6F8461170336D8e8cf46A39313DEab9": {symbol: "LUISA", logo: "images/luisa.png", decimals: 7},
@@ -197,8 +197,8 @@
 
         async function updateBalance() {
             if (!contract || !accounts) return;
-            const tokenAddress = document.getElementById('tokenInSelect').querySelector('.select-selected').dataset.value;
-            if (tokenAddress) {
+            const tokenAddress = getSelectedValue('tokenInSelect');
+            if (tokenAddress && tokens[tokenAddress]) {
                 const tokenContract = new web3.eth.Contract(erc20ABI, tokenAddress);
                 try {
                     const balanceWei = await tokenContract.methods.balanceOf(accounts[0]).call();
@@ -215,8 +215,8 @@
 
         function setPercentage(percentage) {
             if (!contract || !accounts) return;
-            const tokenAddress = document.getElementById('tokenInSelect').querySelector('.select-selected').dataset.value;
-            if (!tokenAddress) return;
+            const tokenAddress = getSelectedValue('tokenInSelect');
+            if (!tokenAddress || !tokens[tokenAddress]) return;
             updateBalance().then(async () => {
                 const tokenContract = new web3.eth.Contract(erc20ABI, tokenAddress);
                 const balanceWei = await tokenContract.methods.balanceOf(accounts[0]).call();
@@ -231,16 +231,16 @@
         function updatePrice() {
             const amountIn = parseFloat(document.getElementById('amountInInput').value) || 0;
             const amountBone = parseFloat(document.getElementById('amountBoneInput').value) || 0;
-            const tokenAddress = document.getElementById('tokenInSelect').querySelector('.select-selected').dataset.value;
-            const symbol = tokenAddress ? tokens[tokenAddress].symbol : '';
-            const decimals = tokenAddress ? tokens[tokenAddress].decimals : 6;
+            const tokenAddress = getSelectedValue('tokenInSelect');
+            const symbol = tokenAddress && tokens[tokenAddress] ? tokens[tokenAddress].symbol : '';
+            const decimals = tokenAddress && tokens[tokenAddress] ? tokens[tokenAddress].decimals : 6;
             const price = amountIn > 0 ? (amountBone / amountIn).toFixed(decimals) : 0;
             document.getElementById('priceInfo').innerText = `Price per ${symbol}: ${price} BONE`;
         }
 
         async function createOrder() {
             if (!contract || !accounts) return alert("Connect MetaMask first!");
-            const tokenIn = document.getElementById('tokenInSelect').querySelector('.select-selected').dataset.value;
+            const tokenIn = getSelectedValue('tokenInSelect');
             const amountIn = document.getElementById('amountInInput').value;
             const amountBone = document.getElementById('amountBoneInput').value;
             if (!tokenIn || !amountIn || !amountBone || amountBone < 1) return alert("Invalid input! BONE must be at least 1.");
@@ -303,7 +303,7 @@
 
         async function queryOrders() {
             if (!contract || !accounts) return alert("Connect MetaMask first!");
-            const tokenFilter = document.getElementById('tokenFilterSelect').querySelector('.select-selected').dataset.value;
+            const tokenFilter = getSelectedValue('tokenFilterSelect');
             if (!tokenFilter) {
                 document.getElementById('activeOrders').querySelector('.active-order-grid').innerHTML = '<p>Select a token to query orders.</p>';
                 return;
@@ -331,8 +331,14 @@
             });
         }
 
-        // Custom select functionality
-        document.querySelectorAll('.custom-select').forEach(select => {
+        function getSelectedValue(selectId) {
+            const select = document.getElementById(selectId);
+            const selectedItem = select.querySelector('.select-selected');
+            return selectedItem.dataset.value || '';
+        }
+
+        function initCustomSelect(selectId) {
+            const select = document.getElementById(selectId);
             const selected = select.querySelector('.select-selected');
             const items = select.querySelector('.select-items');
             const options = items.querySelectorAll('.select-item');
@@ -343,26 +349,26 @@
 
             options.forEach(option => {
                 option.addEventListener('click', () => {
-                    const value = option.dataset.value;
                     selected.innerHTML = option.innerHTML;
-                    selected.dataset.value = value;
+                    selected.dataset.value = option.dataset.value;
                     items.classList.remove('select-show');
-                    if (select.id === 'tokenInSelect') updateBalance();
+                    if (selectId === 'tokenInSelect') updateBalance();
                 });
             });
 
             document.addEventListener('click', (e) => {
-                if (!select.contains(e.target)) {
-                    items.classList.remove('select-show');
-                }
+                if (!select.contains(e.target)) items.classList.remove('select-show');
             });
-        });
+        }
 
         document.getElementById('connectButton').addEventListener('click', connectWallet);
         document.getElementById('createOrderButton').addEventListener('click', createOrder);
         document.getElementById('queryOrdersButton').addEventListener('click', queryOrders);
         document.getElementById('amountInInput').addEventListener('input', updatePrice);
         document.getElementById('amountBoneInput').addEventListener('input', updatePrice);
+
+        initCustomSelect('tokenInSelect');
+        initCustomSelect('tokenFilterSelect');
 
         window.ethereum?.on('chainChanged', (chainId) => {
             if (parseInt(chainId, 16) !== 109) {
@@ -382,9 +388,4 @@
         });
 
         window.addEventListener('load', () => {
-            if (!window.location.protocol.startsWith('http')) document.getElementById('networkStatus').innerHTML = 'Run via a local server (e.g., "npx serve") to connect MetaMask.';
-            else if (!window.ethereum) document.getElementById('networkStatus').innerHTML = 'No wallet detected. Install <a href="https://metamask.io" target="_blank">MetaMask</a>.';
-        });
-    </script>
-</body>
-</html>
+            if (!window.location.protocol.startsWith('http')) document.getElementById('networkStatus').innerHTML = 'RunSorry about that, something didn't go as planned. Please try again, and if you're still seeing this message, go ahead and restart the app.
