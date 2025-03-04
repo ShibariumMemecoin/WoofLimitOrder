@@ -221,7 +221,7 @@
             const amountBone = parseFloat(document.getElementById('amountBoneInput').value) || 0;
             const tokenAddress = document.getElementById('tokenInSelect').value;
             const symbol = tokenAddress ? tokens[tokenAddress].symbol : '';
-            const decimals = tokenAddress ? tokens[tokenAddress].decimals : 18;
+            const decimals = tokenAddress ? tokens[tokenAddress].decimals : 6;
             const price = amountIn > 0 ? (amountBone / amountIn).toFixed(decimals) : 0;
             document.getElementById('priceInfo').innerText = `Price per ${symbol}: ${price} BONE`;
         }
@@ -275,11 +275,11 @@
             const userOrders = await contract.methods.getUserOrders(accounts[0], 0, 10).call();
             userOrdersDiv.innerHTML = userOrders.length ? '' : '<p>No orders yet.</p>';
             userOrders.forEach(order => {
-                const token = tokens[order.tokenIn] || {symbol: "Unknown", logo: "", decimals: 18};
+                const token = tokens[order.tokenIn] || {symbol: "Unknown", logo: "", decimals: 6};
                 const decimals = token.decimals;
                 const amountIn = (Number(order.amountIn) / Math.pow(10, decimals)).toFixed(4);
                 const amountBone = web3.utils.fromWei(order.amountBone, 'ether');
-                const price = (order.amountBone / order.amountIn * Math.pow(10, decimals - 18)).toFixed(decimals);
+                const price = (Number(order.amountBone) / Number(order.amountIn)).toFixed(decimals);
                 userOrdersDiv.innerHTML += `
                     <div class="order-item">
                         <span>ID: ${order.id} | <img src="${token.logo}" alt="${token.symbol}"> ${token.symbol} ${amountIn} for ${amountBone} BONE | Price: ${price} BONE/${token.symbol}</span>
@@ -301,11 +301,11 @@
             const sortedOrders = activeOrders.filter(order => order.isActive).sort((a, b) => (a.amountBone / a.amountIn) - (b.amountBone / b.amountIn));
             activeOrdersDiv.innerHTML = sortedOrders.length ? '' : '<p>No active orders for this token.</p>';
             sortedOrders.forEach(order => {
-                const token = tokens[order.tokenIn] || {symbol: "Unknown", logo: "", decimals: 18};
+                const token = tokens[order.tokenIn] || {symbol: "Unknown", logo: "", decimals: 6};
                 const decimals = token.decimals;
                 const amountIn = (Number(order.amountIn) / Math.pow(10, decimals)).toFixed(4);
                 const amountBone = web3.utils.fromWei(order.amountBone, 'ether');
-                const price = (order.amountBone / order.amountIn * Math.pow(10, decimals - 18)).toFixed(decimals);
+                const price = (Number(order.amountBone) / Number(order.amountIn)).toFixed(decimals);
                 activeOrdersDiv.innerHTML += `
                     <div class="order-box">
                         <span>ID: ${order.id}</span>
