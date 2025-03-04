@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoofLimitOrder - Shiba Trading Hub</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%); color: #ffffff; margin: 0; padding: 0; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; overflow-x: hidden; position: relative; }
+        .container { background: rgba(255, 145, 0, 0.95); padding: 40px; border-radius: 25px; box-shadow: 0 0 30px rgba(255, 145, 0, 0.8); width: 90%; max-width: 1200px; text-align: center; border: 3px solid #ffffff; margin: 20px auto; }
+        h1 { color: #ffffff; font-size: 3em; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 3px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); }
+        .title-icon { font-size: 1.8em; margin-right: 15px; vertical-align: middle; }
+        .intro { margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #2c2c2c 0%, #3a3a3a 100%); border-radius: 15px; box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.7); border: 1px solid #555555; font-size: 1.1em; line-height: 1.6; }
+        .section { margin: 25px 0; padding: 25px; background: linear-gradient(135deg, #2c2c2c 0%, #3a3a3a 100%); border-radius: 15px; box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.7); border: 1px solid #555555; }
+        .section-title { font-size: 1.5em; margin-bottom: 15px; color: #ffcc80; text-transform: uppercase; }
+        .button-group { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; }
+        button { background-color: #ffffff; color: #ff9100; border: none; padding: 15px 30px; margin: 5px; border-radius: 12px; cursor: pointer; font-size: 1.2em; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); min-width: 200px; touch-action: manipulation; }
+        button:hover { background-color: #ffcc80; transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4); }
+        #connectButton { background-color: #ff9100; color: #ffffff; font-weight: bold; min-width: 250px; }
+        #connectButton:hover { background-color: #e68a00; }
+        .input-group { margin: 20px 0; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px; }
+        select, input { padding: 12px; border: none; border-radius: 8px; margin: 5px; background-color: #444444; color: #ffffff; font-size: 1.1em; width: 250px; box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3); touch-action: manipulation; }
+        select:focus, input:focus { outline: none; box-shadow: inset 0 0 10px #ffffff, 0 0 5px #ff9100; }
+        .token-option { display: flex; align-items: center; }
+        .token-option img { width: 20px; height: 20px; margin-right: 10px; }
+        .percentage-buttons { display: flex; justify-content: center; gap: 10px; margin: 10px 0; }
+        .percentage-btn { background-color: #ff9100; color: #ffffff; padding: 8px 15px; font-size: 1em; min-width: 60px; }
+        .percentage-btn:hover { background-color: #e68a00; }
+        .balance-info { font-size: 1em; color: #ffcc80; margin-top: 5px; }
+        .price-info { font-size: 1em; color: #ffcc80; margin-top: 5px; }
+        .order-list { padding: 20px; background: linear-gradient(135deg, #333333 0%, #444444 100%); border-radius: 15px; margin-top: 15px; }
+        .user-order-list { max-height: 300px; overflow-y: auto; }
+        .order-item { margin: 8px 0; padding: 10px; background-color: rgba(255, 255, 255, 0.1); border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
+        .order-item img { width: 20px; height: 20px; margin-right: 10px; vertical-align: middle; }
+        .active-order-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .order-box { background-color: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px; text-align: center; }
+        .order-box span { display: block; margin: 5px 0; font-size: 0.9em; }
+        .order-box img { width: 20px; height: 20px; vertical-align: middle; margin-right: 5px; }
+        .order-box button { padding: 8px 15px; font-size: 1em; min-width: 100px; }
+        footer { position: fixed; bottom: 0; width: 100%; background: rgba(0, 0, 0, 0.8); text-align: center; font-size: 0.9em; color: #ffcc80; padding: 10px 0; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5); z-index: 1000; font-family: 'Comic Sans MS', cursive; }
+        .status { margin-top: 10px; font-size: 1em; color: #ffcc80; }
+        .loading { opacity: 0.7; pointer-events: none; }
+        #walletAddress { color: #ffcc80; font-weight: bold; }
+        @media (max-width: 600px) {
+            body { align-items: flex-start; padding-top: 10px; }
+            .container { width: 100%; padding: 15px; margin: 0; border-radius: 0; min-height: 90vh; box-shadow: none; }
+            h1 { font-size: 1.5em; margin-bottom: 15px; }
+            .section-title { font-size: 1.1em; }
+            button { width: 100%; font-size: 0.9em; min-width: 0; padding: 10px 15px; }
+            select, input { width: 100%; margin: 5px 0; padding: 8px; }
+            .input-group { flex-direction: column; }
+            .button-group { flex-direction: column; }
+            .intro { padding: 10px; font-size: 0.9em; }
+            .percentage-buttons { flex-direction: column; gap: 5px; }
+            .user-order-list { max-height: 200px; }
+            .active-order-grid { grid-template-columns: 1fr; }
+            .order-box { padding: 10px; }
+            .order-box button { width: 100%; }
+        }
+        @media (min-width: 601px) and (max-width: 900px) {
+            .container { padding: 30px; }
+            button { padding: 14px 25px; }
+            select, input { width: 200px; }
+            .active-order-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><span class="title-icon">🐶</span>WoofLimitOrder - Shiba Trading Hub</h1>
+        <div class="intro">
+            Trade tokens for BONE on Shibarium! Select token, set your price, and create or buy orders. 1% fee per trade.
+        </div>
+        <div class="section">
+            <div class="section-title">Connect Wallet</div>
+            <div class="button-group">
+                <button id="connectButton">Connect MetaMask</button>
+            </div>
+            <p>Wallet: <span id="walletAddress">Not connected</span></p>
+            <div id="networkStatus" class="status">Click to connect...</div>
+        </div>
+        <div class="section">
+            <div class="section-title">Create Order</div>
+            <div class="input-group">
+                <select id="tokenInSelect">
+                    <option value="">Select Token</option>
+                    <option value="0xeCe898EdCc0AF91430603175F945D8de75291c70"><img src="images/DAMN.png" alt="DAMN"> DAMN</option>
+                    <option value="0xe9Cb2D7ADC24Fc59FE00D6C0A0669BDF16805Fe0"><img src="images/feed.png" alt="FEED"> FEED</option>
+                    <option value="0x8f4b11d923BbAA6206f3Dd3ff84e8e31bafB49b7"><img src="images/wow.png" alt="WOW"> WOW</option>
+                    <option value="0x632d1FF1fB27d88EDeDB90e70bFC094D7932A0ad"><img src="images/shipa.png" alt="SHIPA"> SHIPA</option>
+                    <option value="0x61CFA29261d8151D39244b8FfCf8DFd2f9DF3839"><img src="images/CHIKA.png" alt="CHIKA"> CHIKA</option>
+                    <option value="0xD0daa7B6ff1B40d3cc6F0B2Cf7E85cB993D1c834"><img src="images/woof.png" alt="WOOF"> WOOF</option>
+                    <option value="0x0b4FD6288b6d32171CC515bfFC9340026F56A358"><img src="images/pika.png" alt="PIKA"> PIKA</option>
+                    <option value="0x0cCD687CC6F8461170336D8e8cf46A39313DEab9"><img src="images/luisa.png" alt="LUISA"> LUISA</option>
+                    <option value="0xB9Ae1d4e474CC154F48e5C2f0559Eb3A78Ad1F09"><img src="images/shibs.png" alt="SHIBS"> SHIBS</option>
+                </select>
+                <input type="number" id="amountInInput" placeholder="Amount In" min="0" step="any">
+                <input type="number" id="amountBoneInput" placeholder="Amount BONE (Min 1)" min="1" step="any">
+            </div>
+            <div class="balance-info" id="tokenBalance">Token Balance: 0</div>
+            <div class="percentage-buttons">
+                <button class="percentage-btn" onclick="setPercentage(25)">25%</button>
+                <button class="percentage-btn" onclick="setPercentage(50)">50%</button>
+                <button class="percentage-btn" onclick="setPercentage(75)">75%</button>
+                <button class="percentage-btn" onclick="setPercentage(100)">100%</button>
+            </div>
+            <div class="price-info" id="priceInfo">Price per Token: 0 BONE</div>
+            <div class="button-group">
+                <button id="createOrderButton">Approve & Create Order</button>
+            </div>
+            <div class="order-list user-order-list" id="userOrders"></div>
+        </div>
+        <div class="section">
+            <div class="section-title">Active Orders</div>
+            <div class="input-group">
+                <select id="tokenFilterSelect">
+                    <option value="">Select Token</option>
+                    <option value="0xeCe898EdCc0AF91430603175F945D8de75291c70"><img src="images/DAMN.png" alt="DAMN"> DAMN</option>
+                    <option value="0xe9Cb2D7ADC24Fc59FE00D6C0A0669BDF16805Fe0"><img src="images/feed.png" alt="FEED"> FEED</option>
+                    <option value="0x8f4b11d923BbAA6206f3Dd3ff84e8e31bafB49b7"><img src="images/wow.png" alt="WOW"> WOW</option>
+                    <option value="0x632d1FF1fB27d88EDeDB90e70bFC094D7932A0ad"><img src="images/shipa.png" alt="SHIPA"> SHIPA</option>
+                    <option value="0x61CFA29261d8151D39244b8FfCf8DFd2f9DF3839"><img src="images/CHIKA.png" alt="CHIKA"> CHIKA</option>
+                    <option value="0xD0daa7B6ff1B40d3cc6F0B2Cf7E85cB993D1c834"><img src="images/woof.png" alt="WOOF"> WOOF</option>
+                    <option value="0x0b4FD6288b6d32171CC515bfFC9340026F56A358"><img src="images/pika.png" alt="PIKA"> PIKA</option>
+                    <option value="0x0cCD687CC6F8461170336D8e8cf46A39313DEab9"><img src="images/luisa.png" alt="LUISA"> LUISA</option>
+                    <option value="0xB9Ae1d4e474CC154F48e5C2f0559Eb3A78Ad1F09"><img src="images/shibs.png" alt="SHIBS"> SHIBS</option>
+                </select>
+                <button id="queryOrdersButton">Query Orders</button>
+            </div>
+            <div class="order-list" id="activeOrders">
+                <div class="active-order-grid"></div>
+            </div>
+        </div>
+    </div>
+    <footer>© 2025 WoofLimitOrder - All Rights Reserved. Powered by Shibarium Memecoin Ecosystem.</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
+    <script>
+        let web3, accounts, contract;
+        const contractAddress = "0x0D144DDA841948DC9B1F7738277737bdB1C62d4e";
+        const contractABI = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"orderId","type":"uint256"}],"name":"OrderCancelled","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"orderId","type":"uint256"},{"indexed":true,"internalType":"address","name":"trader","type":"address"},{"indexed":false,"internalType":"address","name":"tokenIn","type":"address"},{"indexed":false,"internalType":"uint256","name":"amountIn","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amountBone","type":"uint256"}],"name":"OrderCreated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"orderId","type":"uint256"},{"indexed":true,"internalType":"address","name":"buyer","type":"address"},{"indexed":false,"internalType":"uint256","name":"amountIn","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amountBone","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"feeAmount","type":"uint256"}],"name":"OrderFilled","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"FeesWithdrawn","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"token","type":"address"},{"indexed":false,"internalType":"bool","name":"isWhitelisted","type":"bool"}],"name":"TokenWhitelisted","type":"event"},{"inputs":[{"internalType":"uint256","name":"_orderId","type":"uint256"}],"name":"buy","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_orderId","type":"uint256"}],"name":"cancelOrder","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_tokenIn","type":"address"},{"internalType":"uint256","name":"_amountIn","type":"uint256"},{"internalType":"uint256","name":"_amountBone","type":"uint256"}],"name":"createOrder","outputs":[{"internalType":"uint256","name":"orderId","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"activeOrdersByToken","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"feeBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_tokenIn","type":"address"},{"internalType":"uint256","name":"_page","type":"uint256"},{"internalType":"uint256","name":"_perPage","type":"uint256"}],"name":"getActiveOrders","outputs":[{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"trader","type":"address"},{"internalType":"address","name":"tokenIn","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"amountBone","type":"uint256"},{"internalType":"bool","name":"isActive","type":"bool"}],"internalType":"struct WoofLimitOrder.Order[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getActiveOrderIds","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getFeeBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_orderId","type":"uint256"}],"name":"getOrder","outputs":[{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"trader","type":"address"},{"internalType":"address","name":"tokenIn","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"amountBone","type":"uint256"},{"internalType":"bool","name":"isActive","type":"bool"}],"internalType":"struct WoofLimitOrder.Order","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"uint256","name":"_page","type":"uint256"},{"internalType":"uint256","name":"_perPage","type":"uint256"}],"name":"getUserOrders","outputs":[{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"trader","type":"address"},{"internalType":"address","name":"tokenIn","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"amountBone","type":"uint256"},{"internalType":"bool","name":"isActive","type":"bool"}],"internalType":"struct WoofLimitOrder.Order[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nextOrderId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"orders","outputs":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"address","name":"trader","type":"address"},{"internalType":"address","name":"tokenIn","type":"address"},{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"amountBone","type":"uint256"},{"internalType":"bool","name":"isActive","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"ordersByUser","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"whitelistedTokens","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"withdrawFees","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_token","type":"address"},{"internalType":"bool","name":"_isWhitelisted","type":"bool"}],"name":"whitelistToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"stateMutability":"payable","type":"receive"}];
+        const erc20ABI = [{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"type":"function"}];
+        const shibarium = {chainId: 109,chainName: 'Shibarium',nativeCurrency: {name: 'BONE',symbol: 'BONE',decimals: 18},rpcUrls: ['https://rpc.shibrpc.com'],blockExplorerUrls: ['https://shibariumscan.io']};
+        const tokens = {
+            "0xeCe898EdCc0AF91430603175F945D8de75291c70": {symbol: "DAMN", logo: "images/DAMN.png"},
+            "0xe9Cb2D7ADC24Fc59FE00D6C0A0669BDF16805Fe0": {symbol: "FEED", logo: "images/feed.png"},
+            "0x8f4b11d923BbAA6206f3Dd3ff84e8e31bafB49b7": {symbol: "WOW", logo: "images/wow.png"},
+            "0x632d1FF1fB27d88EDeDB90e70bFC094D7932A0ad": {symbol: "SHIPA", logo: "images/shipa.png"},
+            "0x61CFA29261d8151D39244b8FfCf8DFd2f9DF3839": {symbol: "CHIKA", logo: "images/CHIKA.png"},
+            "0xD0daa7B6ff1B40d3cc6F0B2Cf7E85cB993D1c834": {symbol: "WOOF", logo: "images/woof.png"},
+            "0x0b4FD6288b6d32171CC515bfFC9340026F56A358": {symbol: "PIKA", logo: "images/pika.png"},
+            "0x0cCD687CC6F8461170336D8e8cf46A39313DEab9": {symbol: "LUISA", logo: "images/luisa.png"},
+            "0xB9Ae1d4e474CC154F48e5C2f0559Eb3A78Ad1F09": {symbol: "SHIBS", logo: "images/shibs.png"}
+        };
+
+        async function connectWallet() {
+            const status = document.getElementById('networkStatus');
+            const connectButton = document.getElementById('connectButton');
+            try {
+                if (!window.ethereum) throw new Error("No wallet detected. Install MetaMask.");
+                connectButton.classList.add('loading');
+                status.innerText = "Connecting...";
+                web3 = new Web3(window.ethereum);
+                accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                if (!accounts.length) throw new Error("Unlock or connect wallet.");
+                const chainId = await web3.eth.getChainId();
+                if (chainId !== 109) {
+                    try {
+                        await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: "0x6d" }] });
+                    } catch (switchError) {
+                        if (switchError.code === 4902) await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [shibarium] });
+                        else throw switchError;
+                    }
+                }
+                document.getElementById('walletAddress').innerText = `${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`;
+                contract = new web3.eth.Contract(contractABI, contractAddress);
+                status.innerText = "Connected to Shibarium";
+                await updateUserOrders();
+            } catch (error) {
+                console.error(error);
+                status.innerText = "Failed: " + error.message;
+            } finally {
+                connectButton.classList.remove('loading');
+            }
+        }
+
+        async function updateBalance() {
+            if (!contract || !accounts) return;
+            const tokenAddress = document.getElementById('tokenInSelect').value;
+            if (tokenAddress) {
+                const tokenContract = new web3.eth.Contract(erc20ABI, tokenAddress);
+                try {
+                    const balanceWei = await tokenContract.methods.balanceOf(accounts[0]).call();
+                    const balance = Number(web3.utils.fromWei(balanceWei, 'ether')).toFixed(4);
+                    document.getElementById('tokenBalance').innerText = `Token Balance: ${balance} ${tokens[tokenAddress].symbol}`;
+                } catch {
+                    document.getElementById('tokenBalance').innerText = "Token Balance: Invalid Token";
+                }
+            } else {
+                document.getElementById('tokenBalance').innerText = "Token Balance: Select a token";
+            }
+        }
+
+        function setPercentage(percentage) {
+            if (!contract || !accounts) return;
+            const tokenAddress = document.getElementById('tokenInSelect').value;
+            if (!tokenAddress) return;
+            updateBalance().then(async () => {
+                const tokenContract = new web3.eth.Contract(erc20ABI, tokenAddress);
+                const balanceWei = await tokenContract.methods.balanceOf(accounts[0]).call();
+                const balance = Number(web3.utils.fromWei(balanceWei, 'ether'));
+                const amount = (balance * percentage / 100).toFixed(4);
+                document.getElementById('amountInInput').value = amount;
+                updatePrice();
+            });
+        }
+
+        function updatePrice() {
+            const amountIn = parseFloat(document.getElementById('amountInInput').value) || 0;
+            const amountBone = parseFloat(document.getElementById('amountBoneInput').value) || 0;
+            const price = amountIn > 0 ? (amountBone / amountIn).toFixed(6) : 0;
+            const tokenAddress = document.getElementById('tokenInSelect').value;
+            const symbol = tokenAddress ? tokens[tokenAddress].symbol : '';
+            document.getElementById('priceInfo').innerText = `Price per ${symbol}: ${price} BONE`;
+        }
+
+        async function createOrder() {
+            if (!contract || !accounts) return alert("Connect MetaMask first!");
+            const tokenIn = document.getElementById('tokenInSelect').value;
+            const amountIn = document.getElementById('amountInInput').value;
+            const amountBone = document.getElementById('amountBoneInput').value;
+            if (!tokenIn || !amountIn || !amountBone || amountBone < 1) return alert("Invalid input! BONE must be at least 1.");
+            try {
+                const amountInWei = web3.utils.toWei(amountIn.toString(), 'ether');
+                const amountBoneWei = web3.utils.toWei(amountBone.toString(), 'ether');
+                const tokenContract = new web3.eth.Contract(erc20ABI, tokenIn);
+                await tokenContract.methods.approve(contractAddress, amountInWei).send({ from: accounts[0] });
+                await contract.methods.createOrder(tokenIn, amountInWei, amountBoneWei).send({ from: accounts[0] });
+                alert("Order created successfully!");
+                await updateUserOrders();
+            } catch (error) {
+                alert("Failed: " + error.message);
+            }
+        }
+
+        async function buyOrder(orderId, amountBone) {
+            if (!contract || !accounts) return alert("Connect MetaMask first!");
+            try {
+                await contract.methods.buy(orderId).send({ from: accounts[0], value: web3.utils.toWei(amountBone.toString(), 'ether') });
+                alert("Order bought!");
+                await updateUserOrders();
+                await queryOrders();
+            } catch (error) {
+                alert("Failed: " + error.message);
+            }
+        }
+
+        async function cancelOrder(orderId) {
+            if (!contract || !accounts) return alert("Connect MetaMask first!");
+            try {
+                await contract.methods.cancelOrder(orderId).send({ from: accounts[0] });
+                alert("Order cancelled!");
+                await updateUserOrders();
+            } catch (error) {
+                alert("Failed: " + error.message);
+            }
+        }
+
+        async function updateUserOrders() {
+            if (!contract || !accounts) return;
+            const userOrdersDiv = document.getElementById('userOrders');
+            const userOrders = await contract.methods.getUserOrders(accounts[0], 0, 10).call();
+            userOrdersDiv.innerHTML = userOrders.length ? '' : '<p>No orders yet.</p>';
+            userOrders.forEach(order => {
+                const token = tokens[order.tokenIn] || {symbol: "Unknown", logo: ""};
+                const price = (order.amountBone / order.amountIn).toFixed(6);
+                userOrdersDiv.innerHTML += `
+                    <div class="order-item">
+                        <span>ID: ${order.id} | <img src="${token.logo}" alt="${token.symbol}"> ${token.symbol} ${web3.utils.fromWei(order.amountIn, 'ether')} for ${web3.utils.fromWei(order.amountBone, 'ether')} BONE | Price: ${price} BONE/${token.symbol}</span>
+                        ${order.isActive ? `<button onclick="cancelOrder('${order.id}')">Cancel</button>` : '<span>Completed</span>'}
+                    </div>
+                `;
+            });
+        }
+
+        async function queryOrders() {
+            if (!contract || !accounts) return alert("Connect MetaMask first!");
+            const tokenFilter = document.getElementById('tokenFilterSelect').value;
+            if (!tokenFilter) {
+                document.getElementById('activeOrders').querySelector('.active-order-grid').innerHTML = '<p>Select a token to query orders.</p>';
+                return;
+            }
+            const activeOrdersDiv = document.getElementById('activeOrders').querySelector('.active-order-grid');
+            const activeOrders = await contract.methods.getActiveOrders(tokenFilter, 0, 50).call();
+            const sortedOrders = activeOrders.filter(order => order.isActive).sort((a, b) => (a.amountBone / a.amountIn) - (b.amountBone / b.amountIn));
+            activeOrdersDiv.innerHTML = sortedOrders.length ? '' : '<p>No active orders for this token.</p>';
+            sortedOrders.forEach(order => {
+                const token = tokens[order.tokenIn] || {symbol: "Unknown", logo: ""};
+                const price = (order.amountBone / order.amountIn).toFixed(6);
+                activeOrdersDiv.innerHTML += `
+                    <div class="order-box">
+                        <span>ID: ${order.id}</span>
+                        <span><img src="${token.logo}" alt="${token.symbol}"> ${token.symbol}</span>
+                        <span>Amount: ${web3.utils.fromWei(order.amountIn, 'ether')}</span>
+                        <span>BONE: ${web3.utils.fromWei(order.amountBone, 'ether')}</span>
+                        <span>Price: ${price} BONE/${token.symbol}</span>
+                        <button onclick="buyOrder('${order.id}', '${web3.utils.fromWei(order.amountBone, 'ether')}')">Buy</button>
+                    </div>
+                `;
+            });
+        }
+
+        document.getElementById('connectButton').addEventListener('click', connectWallet);
+        document.getElementById('createOrderButton').addEventListener('click', createOrder);
+        document.getElementById('queryOrdersButton').addEventListener('click', queryOrders);
+        document.getElementById('tokenInSelect').addEventListener('change', updateBalance);
+        document.getElementById('amountInInput').addEventListener('input', updatePrice);
+        document.getElementById('amountBoneInput').addEventListener('input', updatePrice);
+
+        window.ethereum?.on('chainChanged', (chainId) => {
+            if (parseInt(chainId, 16) !== 109) {
+                document.getElementById('networkStatus').innerText = "Wrong network. Reconnect to Shibarium.";
+                web3 = null; contract = null; accounts = null;
+                document.getElementById('walletAddress').innerText = "Not connected";
+            } else connectWallet();
+        });
+
+        window.ethereum?.on('accountsChanged', (newAccounts) => {
+            if (newAccounts.length) connectWallet();
+            else {
+                document.getElementById('networkStatus').innerText = "Wallet disconnected. Reconnect.";
+                web3 = null; contract = null; accounts = null;
+                document.getElementById('walletAddress').innerText = "Not connected";
+            }
+        });
+
+        window.addEventListener('load', () => {
+            if (!window.location.protocol.startsWith('http')) document.getElementById('networkStatus').innerHTML = 'Run via a local server (e.g., "npx serve") to connect MetaMask.';
+            else if (!window.ethereum) document.getElementById('networkStatus').innerHTML = 'No wallet detected. Install <a href="https://metamask.io" target="_blank">MetaMask</a>.';
+        });
+    </script>
+</body>
+</html>
